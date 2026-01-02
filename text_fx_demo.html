@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Engine Full</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="text_fx_demo.css">
+    <style>
+        /* Custom chevron rotation for details */
+        details>summary {
+            list-style: none;
+        }
+
+        details>summary::-webkit-details-marker {
+            display: none;
+        }
+
+        details[open]>summary .chevron {
+            transform: rotate(180deg);
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex h-screen overflow-hidden font-sans">
+
+    <!-- Sidebar: Controls -->
+    <aside class="w-96 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 z-10 shadow-lg">
+        <div class="p-6 space-y-2">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Text Effects Engine</h2>
+                <button onclick="document.getElementById('importFile').click()"
+                    class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 px-3 rounded transition-colors flex items-center gap-1 border border-gray-300"
+                    title="Import JSON Settings">
+                    <i class="ri-upload-2-line"></i> Import
+                </button>
+                <input type="file" id="importFile" accept=".json" class="hidden" onchange="handleFileSelect(event)">
+            </div>
+
+            <!-- Text Settings -->
+            <details class="group bg-white rounded-lg border border-gray-100 open:border-gray-200 open:shadow-sm" open>
+                <summary
+                    class="flex items-center justify-between p-3 cursor-pointer bg-gray-50 rounded-t-lg group-hover:bg-gray-100 transition-colors">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Content & Font</h3>
+                    <i class="ri-arrow-down-s-line chevron text-gray-500 transition-transform duration-200 text-lg"></i>
+                </summary>
+                <div class="p-4 space-y-4 pt-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Text</label>
+                        <input id="textInput" value="Hello World"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Font Family</label>
+
+                            <!-- Custom Font Selector -->
+                            <div class="relative">
+                                <!-- Trigger Button -->
+                                <button id="fontSelectorBtn" onclick="toggleFontDropdown()"
+                                    class="w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm relative">
+                                    <span class="block truncate" id="selectedFontDisplay">Poppins</span>
+                                    <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                                        <i class="ri-arrow-down-s-line text-gray-400 text-xl"></i>
+                                    </span>
+                                </button>
+
+                                <!-- Hidden Input to Store Value for JS -->
+                                <input type="hidden" id="fontFamily" value="Poppins">
+
+                                <!-- Dropdown Content -->
+                                <div id="fontDropdown"
+                                    class="hidden absolute z-50 mt-1 w-full bg-white shadow-xl max-h-96 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-hidden focus:outline-none sm:text-sm flex flex-col">
+
+                                    <!-- Search & Filter -->
+                                    <div class="p-2 border-b border-gray-100 bg-gray-50 sticky top-0 z-10 space-y-2">
+                                        <input type="text" id="fontSearch" placeholder="Search fonts..."
+                                            class="w-full border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:ring-primary focus:border-primary">
+
+                                        <div class="flex gap-1 overflow-x-auto pb-1 no-scrollbar"
+                                            id="fontCategoryFilters">
+                                            <!-- Filter tags injected by JS or static -->
+                                            <button
+                                                class="font-filter-btn px-2 py-0.5 text-xs bg-gray-200 rounded-full hover:bg-gray-300 transition-colors whitespace-nowrap active-filter"
+                                                data-cat="all">All</button>
+                                            <button
+                                                class="font-filter-btn px-2 py-0.5 text-xs bg-gray-100 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap"
+                                                data-cat="serif">Serif</button>
+                                            <button
+                                                class="font-filter-btn px-2 py-0.5 text-xs bg-gray-100 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap"
+                                                data-cat="sans-serif">Sans</button>
+                                            <button
+                                                class="font-filter-btn px-2 py-0.5 text-xs bg-gray-100 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap"
+                                                data-cat="display">Display</button>
+                                            <button
+                                                class="font-filter-btn px-2 py-0.5 text-xs bg-gray-100 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap"
+                                                data-cat="handwriting">Handwriting</button>
+                                            <button
+                                                class="font-filter-btn px-2 py-0.5 text-xs bg-gray-100 rounded-full hover:bg-gray-200 transition-colors whitespace-nowrap"
+                                                data-cat="monospace">Mono</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Font List -->
+                                    <ul id="fontList" class="overflow-y-auto max-h-60" role="listbox">
+                                        <!-- Items injected by JS -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                            <input id="fontSize" type="number" value="80"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tracking</label>
+                            <input id="tracking" type="number" value="0" step="1"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Style</label>
+                            <div class="flex space-x-1 border border-gray-300 rounded-md p-1 bg-white">
+                                <button id="btnBold" onclick="toggleStyle('bold')"
+                                    class="p-1.5 rounded hover:bg-gray-100 transition-colors text-gray-700"
+                                    title="Bold">
+                                    <i class="ri-bold"></i>
+                                </button>
+                                <button id="btnItalic" onclick="toggleStyle('italic')"
+                                    class="p-1.5 rounded hover:bg-gray-100 transition-colors text-gray-700"
+                                    title="Italic">
+                                    <i class="ri-italic"></i>
+                                </button>
+                                <button id="btnUnderline" onclick="toggleStyle('underline')"
+                                    class="p-1.5 rounded hover:bg-gray-100 transition-colors text-gray-700"
+                                    title="Underline">
+                                    <i class="ri-underline"></i>
+                                </button>
+                                <button id="btnStrike" onclick="toggleStyle('strike')"
+                                    class="p-1.5 rounded hover:bg-gray-100 transition-colors text-gray-700"
+                                    title="Strikethrough">
+                                    <i class="ri-strikethrough"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hidden Inputs to store state for form submission or strict value reading if needed, 
+                          but typically we'll use JS variables. Let's keep minimal hidden inputs if we want simple retention.
+                          Actually, better to rely on JS state variables initialized on load. -->
+
+                </div>
+            </details>
+
+            <!-- Warp Settings -->
+            <details class="group bg-white rounded-lg border border-gray-100 open:border-gray-200 open:shadow-sm">
+                <summary
+                    class="flex items-center justify-between p-3 cursor-pointer bg-gray-50 rounded-lg open:rounded-t-lg group-hover:bg-gray-100 transition-colors">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Warp & Distortion</h3>
+                    <i class="ri-arrow-down-s-line chevron text-gray-500 transition-transform duration-200 text-lg"></i>
+                </summary>
+                <div class="p-4 space-y-4 pt-2">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                            <select id="warpType"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                                <option value="none">None</option>
+                                <option value="arch">Arch</option>
+                                <option value="wave">Wave</option>
+                                <option value="bulge">Bulge</option>
+                                <option value="rise">Rise</option>
+                                <option value="fisheye">Fish Eye</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Intensity</label>
+                            <input id="warpIntensity" type="number" value="40"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Fill & Gradient -->
+            <details class="group bg-white rounded-lg border border-gray-100 open:border-gray-200 open:shadow-sm">
+                <summary
+                    class="flex items-center justify-between p-3 cursor-pointer bg-gray-50 rounded-lg open:rounded-t-lg group-hover:bg-gray-100 transition-colors">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Fill & Color</h3>
+                    <i class="ri-arrow-down-s-line chevron text-gray-500 transition-transform duration-200 text-lg"></i>
+                </summary>
+                <div class="p-4 space-y-4 pt-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fill Type</label>
+                        <select id="fillType"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            <option value="solid">Solid</option>
+                            <option value="gradient">Gradient</option>
+                        </select>
+                    </div>
+
+                    <div id="fillSolidOptions">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Solid Color</label>
+                        <div class="flex items-center">
+                            <input id="solidColor" value="#000000"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            <input type="color"
+                                onchange="document.getElementById('solidColor').value = this.value; document.getElementById('solidColor').dispatchEvent(new Event('input'))"
+                                class="ml-2 h-9 w-9 p-0 border-0 rounded overflow-hidden cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div id="fillGradientOptions" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gradient Preview</label>
+                            <div id="gradientPreview"
+                                class="w-full h-8 rounded-md border border-gray-300 shadow-inner bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqUAXYwYJAdhgCgAFQAwA8ckQ/75Qp3gAAAAASUVORK5CYII=')]">
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">Gradient Stops</label>
+                                <button onclick="addStop()"
+                                    class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 py-1 px-2 rounded transition-colors flex items-center gap-1">
+                                    <i class="ri-add-line"></i> Add Stop
+                                </button>
+                            </div>
+                            <div id="gradientStopsList" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                                <!-- Stops injected by JS -->
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Gradient Angle</label>
+                            <input id="gradAngle" type="number" value="0"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Stroke -->
+            <details class="group bg-white rounded-lg border border-gray-100 open:border-gray-200 open:shadow-sm">
+                <summary
+                    class="flex items-center justify-between p-3 cursor-pointer bg-gray-50 rounded-lg open:rounded-t-lg group-hover:bg-gray-100 transition-colors">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Stroke</h3>
+                    <i class="ri-arrow-down-s-line chevron text-gray-500 transition-transform duration-200 text-lg"></i>
+                </summary>
+                <div class="p-4 space-y-4 pt-2">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="strokeEnabled"
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                        <label for="strokeEnabled" class="text-sm font-medium text-gray-700">Enable Stroke</label>
+                    </div>
+                    <div id="strokeOptions" class="grid grid-cols-2 gap-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                            <div class="flex">
+                                <input type="color" id="strokeColor" value="#000000"
+                                    class="h-9 w-full p-1 border border-gray-300 rounded">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Thickness</label>
+                            <input type="number" id="strokeWidth" value="3" min="0" step="0.5"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Shadow & 3D -->
+            <details class="group bg-white rounded-lg border border-gray-100 open:border-gray-200 open:shadow-sm">
+                <summary
+                    class="flex items-center justify-between p-3 cursor-pointer bg-gray-50 rounded-lg open:rounded-t-lg group-hover:bg-gray-100 transition-colors">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Shadow & 3D</h3>
+                    <i class="ri-arrow-down-s-line chevron text-gray-500 transition-transform duration-200 text-lg"></i>
+                </summary>
+                <div class="p-4 space-y-4 pt-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Shadow Type</label>
+                        <select id="shadowType"
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            <option value="none">None</option>
+                            <option value="drop">Drop Shadow</option>
+                            <option value="block">Block Shadow</option>
+                            <option value="3d">3D Extrusion</option>
+                        </select>
+                    </div>
+
+                    <div id="shadowCommonOptions" class="space-y-4 hidden">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                                <input type="color" id="shadowColor" value="#000000"
+                                    class="h-9 w-full p-1 border border-gray-300 rounded">
+                            </div>
+                            <div id="shadowOpacityWrapper">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Opacity</label>
+                                <input id="shadowOpacity" type="number" value="0.5" step="0.1" max="1" min="0"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Angle</label>
+                                <input id="shadowAngle" type="number" value="45"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Distance</label>
+                                <input id="shadowDistance" type="number" value="10"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div id="shadowBlurWrapper">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Blur</label>
+                                <input id="shadowBlur" type="number" value="15"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            </div>
+                            <div id="shadowDepthWrapper" class="hidden">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">3D Depth</label>
+                                <input id="shadowDepth" type="number" value="20"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </aside>
+
+
+
+    <!-- Main Content: Canvas -->
+    <main class="flex-1 flex flex-col h-screen relative bg-gray-50">
+        <!-- Floating Actions -->
+        <div class="absolute top-6 right-8 flex space-x-3 z-20">
+            <button onclick="drawCanvas()"
+                class="flex items-center space-x-2 bg-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md shadow-lg transition-all transform hover:scale-[1.02]">
+                <i class="ri-refresh-line text-lg"></i>
+                <span>Update</span>
+            </button>
+
+            <div class="flex items-center space-x-2 bg-white rounded-md shadow-lg border border-gray-300">
+                <select id="exportFormat"
+                    class="bg-transparent text-gray-700 font-semibold py-2 pl-3 pr-1 border-r border-gray-300 focus:outline-none text-sm appearance-none cursor-pointer hover:bg-gray-50 rounded-l-md">
+                    <option value="svg">SVG</option>
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                </select>
+                <button onclick="triggerExport()"
+                    class="flex items-center space-x-2 hover:bg-gray-50 text-gray-700 font-semibold py-2 pr-4 pl-2 rounded-r-md transition-colors">
+                    <i class="ri-download-2-line text-lg"></i>
+                    <span>Export</span>
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="flex-1 flex items-center justify-center p-8 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5">
+            <div class="bg-white p-4 shadow-2xl rounded-lg border border-gray-200">
+                <canvas id="myCanvas" width="540" height="540" class="max-w-full h-auto bg-white"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script src="text_fx_demo.js?v=2"></script>
+    <!-- Toast Notification -->
+    <div id="toast"
+        class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        Font changed
+    </div>
+</body>
+
+</html>
