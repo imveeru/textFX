@@ -16,7 +16,8 @@
 | `content.styles.strike` | Boolean | Yes | Draws a line through the center. | Validated in render loop. |
 | | | | | |
 | **`fill`** | Object | Yes | Configuration for the text face color. | |
-| `fill.type` | Enum | Yes | Determines which fill logic to use. | Values: `"solid"`, `"gradient"`. |
+| `fill.type` | Enum | Yes | Determines which fill logic to use. | Values: `"solid"`, `"gradient"`, `"outline_solid"`, `"outline_gradient"`. |
+| `fill.outlineWidth` | Float | Cond. | Width of the outline. | Used if type starts with "outline". |
 | `fill.solidColor` | Hex String | Cond. | Color used if type is "solid". | Format: `#RRGGBB`. |
 | `fill.gradient` | Object | Cond. | Settings used if type is "gradient". | |
 | `fill.gradient.angle` | Integer | Yes | Angle of the linear gradient in degrees. | 0-360. |
@@ -121,7 +122,8 @@ interface TextEffect {
   };
 
   fill: {
-    type: "solid" | "gradient";
+    type: "solid" | "gradient" | "outline_solid" | "outline_gradient";
+    outlineWidth?: number; // Required if type starts with 'outline'
     solidColor?: HexColor; // Required if type is 'solid'
     gradient?: {           // Required if type is 'gradient'
       angle: number;
