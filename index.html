@@ -40,8 +40,11 @@
 <body class="bg-gray-100 flex h-screen overflow-hidden font-sans">
 
     <!-- Sidebar: Controls -->
-    <aside class="w-96 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 z-10 shadow-lg">
-        <div class="p-6 space-y-2">
+    <aside
+        class="w-96 bg-white border-r border-gray-200 overflow-y-auto flex-shrink-0 z-10 shadow-lg h-full max-h-full">
+
+        <div class="p-6 pb-32 space-y-2">
+
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Text Effects Engine</h2>
                 <button onclick="document.getElementById('importFile').click()"
@@ -300,6 +303,7 @@
                             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
                             <option value="none">None</option>
                             <option value="drop">Drop Shadow</option>
+                            <option value="inner">Inner Shadow</option>
                             <option value="block">Block Shadow</option>
                             <option value="3d">3D Extrusion</option>
                         </select>
@@ -347,8 +351,206 @@
                     </div>
                 </div>
             </details>
+
+            <!-- Bevel & Emboss -->
+            <details class="group bg-white rounded-lg border border-gray-100 open:border-gray-200 open:shadow-sm">
+                <summary
+                    class="flex items-center justify-between p-3 cursor-pointer bg-gray-50 rounded-lg open:rounded-t-lg group-hover:bg-gray-100 transition-colors">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Bevel & Emboss</h3>
+                    <i class="ri-arrow-down-s-line chevron text-gray-500 transition-transform duration-200 text-lg"></i>
+                </summary>
+                <div class="p-4 space-y-4 pt-2">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="bevelEnabled"
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                        <label for="bevelEnabled" class="text-sm font-medium text-gray-700">Enable Bevel &
+                            Emboss</label>
+                    </div>
+
+                    <div id="bevelOptions" class="space-y-4 hidden">
+                        <!-- Style -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Style</label>
+                            <select id="bevelStyle"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                                <option value="inner">Inner Bevel</option>
+                                <option value="outer">Outer Bevel</option>
+                                <option value="emboss">Emboss</option>
+                                <option value="pillow">Pillow Emboss</option>
+                            </select>
+                        </div>
+
+                        <!-- Technique -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Technique</label>
+                            <select id="bevelTechnique"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                                <option value="smooth">Smooth</option>
+                                <option value="chiselHard">Chisel Hard</option>
+                                <option value="chiselSoft">Chisel Soft</option>
+                            </select>
+                        </div>
+
+                        <!-- Direction -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Direction</label>
+                            <div class="flex space-x-4">
+                                <label class="flex items-center">
+                                    <input type="radio" name="bevelDirection" value="up" checked
+                                        class="h-4 w-4 text-primary border-gray-300 focus:ring-primary">
+                                    <span class="ml-2 text-sm text-gray-700">Up</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="bevelDirection" value="down"
+                                        class="h-4 w-4 text-primary border-gray-300 focus:ring-primary">
+                                    <span class="ml-2 text-sm text-gray-700">Down</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Geometry -->
+                        <div class="space-y-3 pt-2 border-t border-gray-100">
+                            <h4 class="text-xs font-semibold text-gray-500 uppercase">Structure</h4>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                                <input id="bevelSize" type="range" min="0" max="100" value="14"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="text-right text-xs text-gray-500" id="bevelSizeVal">14px</div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Depth</label>
+                                <input id="bevelDepth" type="range" min="0" max="1000" value="100"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="text-right text-xs text-gray-500" id="bevelDepthVal">100%</div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Soften</label>
+                                <input id="bevelSoften" type="range" min="0" max="16" value="0" step="1"
+                                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div class="text-right text-xs text-gray-500" id="bevelSoftenVal">0px</div>
+                            </div>
+                        </div>
+
+                        <!-- Shading -->
+                        <div class="space-y-3 pt-2 border-t border-gray-100">
+                            <h4 class="text-xs font-semibold text-gray-500 uppercase">Shading</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Angle</label>
+                                    <input id="bevelAngle" type="number" value="120"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Altitude</label>
+                                    <input id="bevelAltitude" type="number" value="30"
+                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                                </div>
+                            </div>
+
+                            <!-- Highlights -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Highlight Mode</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="color" id="bevelHighlightColor" value="#ffffff"
+                                        class="h-9 w-9 p-0 border-0 rounded cursor-pointer">
+                                    <input id="bevelHighlightOpacity" type="range" min="0" max="100" value="75"
+                                        class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                                <div class="text-right text-xs text-gray-500" id="bevelHighlightOpVal">75%</div>
+                            </div>
+
+                            <!-- Shadows -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Shadow Mode</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="color" id="bevelShadowColor" value="#000000"
+                                        class="h-9 w-9 p-0 border-0 rounded cursor-pointer">
+                                    <input id="bevelShadowOpacity" type="range" min="0" max="100" value="75"
+                                        class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                </div>
+                                <div class="text-right text-xs text-gray-500" id="bevelShadowOpVal">75%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
+            <!-- Glow -->
+            <details class="group bg-white rounded-lg border border-gray-100 open:border-gray-200 open:shadow-sm">
+                <summary
+                    class="flex items-center justify-between p-3 cursor-pointer bg-gray-50 rounded-lg open:rounded-t-lg group-hover:bg-gray-100 transition-colors">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Glow</h3>
+                    <i class="ri-arrow-down-s-line chevron text-gray-500 transition-transform duration-200 text-lg"></i>
+                </summary>
+                <div class="p-4 space-y-4 pt-2">
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="glowEnabled"
+                            class="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded">
+                        <label for="glowEnabled" class="text-sm font-medium text-gray-700">Enable Glow</label>
+                    </div>
+
+                    <div id="glowOptions" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                            <select id="glowType"
+                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                                <option value="outer">Outer Glow</option>
+                                <option value="inner">Inner Glow</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Color</label>
+                                <input type="color" id="glowColor" value="#ffff00"
+                                    class="h-9 w-full p-1 border border-gray-300 rounded">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Blend Mode</label>
+                                <select id="glowBlend"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                                    <option value="normal">Normal</option>
+                                    <option value="screen">Screen</option>
+                                    <option value="overlay">Overlay</option>
+                                    <option value="multiply">Multiply</option>
+                                    <option value="lighter">Add</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Opacity</label>
+                            <input id="glowOpacity" type="range" min="0" max="100" value="100"
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="text-right text-xs text-gray-500" id="glowOpacityVal">100%</div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Size</label>
+                                <input id="glowSize" type="number" value="10" min="0"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Spread</label>
+                                <input id="glowSpread" type="number" value="0" min="0" max="100"
+                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm p-2 border">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Noise</label>
+                            <input id="glowNoise" type="range" min="0" max="100" value="0"
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                            <div class="text-right text-xs text-gray-500" id="glowNoiseVal">0%</div>
+                        </div>
+                    </div>
+                </div>
+            </details>
         </div>
+
     </aside>
+
+
 
 
 
@@ -380,7 +582,8 @@
         <div
             class="flex-1 flex items-center justify-center p-8 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5">
             <div class="bg-white p-4 shadow-2xl rounded-lg border border-gray-200">
-                <canvas id="myCanvas" width="540" height="540" class="max-w-full h-auto bg-white"></canvas>
+                <canvas id="myCanvas" width="1080" height="1080" style="width: 540px; height: auto;"
+                    class="max-w-full bg-white"></canvas>
             </div>
         </div>
     </main>

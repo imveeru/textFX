@@ -31,13 +31,23 @@
 | `stroke.width` | Float | Cond. | Thickness of the outline in pixels. | > 0. Used if enabled. |
 | | | | | |
 | **`shadow`** | Object | Yes | Configuration for shadows and 3D effects. | |
-| `shadow.type` | Enum | Yes | The type of shadow effect. | Values: `"none"`, `"drop"`, `"block"`, `"3d"`. |
+| `shadow.type` | Enum | Yes | The type of shadow effect. | Values: `"none"`, `"drop"`, `"inner"`, `"block"`, `"3d"`. |
 | `shadow.color` | Hex String | Cond. | Base color for the shadow/extrusion. | Format: `#RRGGBB`. |
 | `shadow.opacity` | Float | Cond. | Opacity of the shadow. | 0.0-1.0. Applied to color alpha. |
 | `shadow.angle` | Integer | Cond. | Direction of shadow/extrusion in degrees. | 0-360. |
 | `shadow.distance` | Float | Cond. | Distance for Drop Shadow & Block Shadow. | Used for `"drop"` and `"block"`. |
 | `shadow.blur` | Float | Cond. | Blur radius in pixels. | Used only for `"drop"`. |
 | `shadow.depth` | Integer | Cond. | Extrusion depth (iterations). | Used only for `"3d"`. Note: Code treats "block" distance as depth too. |
+| | | | | |
+| **`glow`** | Object | Yes | Configuration for glow effects. | |
+| `glow.enabled` | Boolean | Yes | Whether glow effect is active. | |
+| `glow.type` | Enum | Yes | Type of glow. | Values: `"inner"`, `"outer"`. |
+| `glow.color` | Hex String | Cond. | Glow color. | Format: `#RRGGBB`. |
+| `glow.opacity` | Float | Cond. | Opacity of the glow. | 0.0-1.0. |
+| `glow.size` | Float | Cond. | Radius of the glow. | Pixels. |
+| `glow.spread` | Float | Cond. | Hardness of the glow edge. | 0.0-1.0 (Percentage). |
+| `glow.noise` | Float | Cond. | Amount of noise texture. | 0.0-1.0 (Percentage). |
+| `glow.blendMode` | Enum | Cond. | Compositing blend mode. | `normal`, `screen`, `overlay`, `multiply`, `lighter`. |
 | | | | | |
 | **`warp`** | Object | Yes | Distortion effects applied to character positions. | |
 | `warp.type` | Enum | Yes | The mathematical function for distortion. | Values: `"none"`, `"arch"`, `"wave"`, `"bulge"`, `"rise"`, `"fisheye"`. |
