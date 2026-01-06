@@ -22,7 +22,7 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="text_fx_demo.css">
+    <link rel="stylesheet" href="styles.css">
     <style>
         /* Custom chevron rotation for details */
         details>summary {
@@ -576,22 +576,27 @@
     <!-- Main Content: Canvas -->
     <main class="flex-1 flex flex-col h-screen relative bg-gray-50">
         <!-- Floating Actions -->
-        <div class="absolute top-6 right-8 flex space-x-3 z-20">
+        <div class="absolute top-6 right-8 flex items-center space-x-3 z-20">
             <button onclick="drawCanvas()" title="Update Canvas"
-                class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold p-2 rounded-lg shadow-md transition-colors w-10 h-10">
-                <i class="ri-refresh-line text-lg"></i>
+                class="flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-colors w-10 h-10">
+                <i class="ri-refresh-line text-xl"></i>
             </button>
 
-            <div class="flex items-center space-x-2 bg-white rounded-md shadow-lg border border-gray-300">
-                <select id="exportFormat"
-                    class="bg-transparent text-gray-700 font-semibold py-2 pl-3 pr-1 border-r border-gray-300 focus:outline-none text-sm appearance-none cursor-pointer hover:bg-gray-50 rounded-l-md">
-                    <option value="svg">SVG</option>
-                    <option value="png">PNG</option>
-                    <option value="jpeg">JPEG</option>
-                    <option value="json">JSON</option>
-                </select>
+            <div class="flex items-center h-10 bg-white rounded-lg shadow-md border border-gray-200">
+                <div class="relative h-full border-r border-gray-200">
+                    <select id="exportFormat"
+                        class="h-full bg-transparent text-gray-700 font-medium pl-3 pr-8 focus:outline-none text-sm cursor-pointer hover:bg-gray-50 rounded-l-lg appearance-none">
+                        <option value="svg">SVG</option>
+                        <option value="png">PNG</option>
+                        <option value="jpeg">JPEG</option>
+                        <option value="json">JSON</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                        <i class="ri-arrow-down-s-line"></i>
+                    </div>
+                </div>
                 <button onclick="triggerExport()"
-                    class="flex items-center space-x-2 hover:bg-gray-50 text-gray-700 font-semibold py-2 pr-4 pl-2 rounded-r-md transition-colors">
+                    class="h-full flex items-center space-x-2 hover:bg-gray-50 text-gray-700 font-medium px-4 rounded-r-lg transition-colors">
                     <i class="ri-download-2-line text-lg"></i>
                     <span>Export</span>
                 </button>
@@ -607,7 +612,7 @@
         </div>
     </main>
 
-    <script src="text_fx_demo.js?v=2"></script>
+    <script type="module" src="js/main.js"></script>
     <!-- Toast Notification -->
     <div id="toast"
         class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded-md shadow-lg transition-opacity duration-300 opacity-0 pointer-events-none z-50">
